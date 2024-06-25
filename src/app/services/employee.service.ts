@@ -8,7 +8,7 @@ import { Employee , PaginatedResponse } from '../models/employee.model';
   providedIn: 'root'
 })
 export class EmployeeService {
-  private apiUrl = 'http://localhost:3000/api/employees'; 
+  private apiUrl = 'http://localhost:3000/api'; 
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +19,7 @@ export class EmployeeService {
       .set('sortField', sortField)
       .set('sortOrder', sortOrder);
   
-    return this.http.get<PaginatedResponse>(this.apiUrl, { params });
+    return this.http.get<PaginatedResponse>(`${this.apiUrl}/employees`, { params });
   }
 
   deleteEmployee(id: number): Observable<void> {

@@ -57,8 +57,9 @@ export class EmployeeListComponent implements OnInit {
   selectedEmployee: Employee | null = null;
   page: number = 1;
   pageSize: number = 5;
-  order: string = 'id';
-  reverse: string = 'false'; 
+  sortField: string = 'id';
+  sortOrder: string = 'asc'; 
+  
 
   constructor(private employeeService: EmployeeService, private orderPipe: OrderPipe) { }
 
@@ -67,33 +68,27 @@ export class EmployeeListComponent implements OnInit {
   }
 
   fetchEmployees(): void {
-    // this.employeeService.getEmployees(this.page, this.pageSize, this.order, "asc").subscribe(
-    //   (data) => {
-    //     console.log("data: ",data)
-    //     this.employees = data.data;
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching employees', error);
-    //   }
-    // );
-    this.sortEmployees();
+    this.employeeService.getEmployees(this.page, this.pageSize, this.sortField, this.sortOrder).subscribe(
+      (data) => {
+        console.log("data: ",data)
+        this.employees = data.data;
+      },
+      (error) => {
+        console.error('Error fetching employees', error);
+      }
+    );
   }
 
   deleteEmployee(id: number): void {
-    // this.employeeService.deleteEmployee(id).subscribe(
-    //   () => {
-    //     // Filter out the deleted employee from the list
-    //     this.employees = this.employees.filter(e => e.id !== id);
-    //   },
-    //   (error) => {
-    //     console.error('Error deleting employee', error);
-    //   }
-    // );
-
-    // Filter out the deleted employee from the list
-    console.log("id:",id)
-    this.employees = this.employees.filter(e => e.id !== id);
-    this.sortEmployees();
+    this.employeeService.deleteEmployee(id).subscribe(
+      () => {
+        this.fetchEmployees();
+      },
+      (error) => {
+        alert('Error deleting employee')
+        console.error('Error deleting employee', error);
+      }
+    );
   }
 
   openModal(employee: Employee | null): void {
@@ -108,46 +103,35 @@ export class EmployeeListComponent implements OnInit {
     if (employee) {
       if (employee.id) {
         // Update employee
-        // this.employeeService.updateEmployee(employee).subscribe(
-        //   (updatedEmployee) => {
-        //     const index = this.employees.findIndex(e => e.id === updatedEmployee.id);
-        //     if (index !== -1) {
-        //       this.employees[index] = updatedEmployee;
-        //     }
-        //   },
-        //   (error) => {
-        //     console.error('Error updating employee', error);
-        //   }
-        // );
-        
-        // Update employee
-        const index = this.employees.findIndex(e => e.id === employee.id);
-        if (index !== -1) {
-          this.employees[index] = employee;
-        }
+        this.employeeService.updateEmployee(employee).subscribe(
+          (updatedEmployee) => {
+            console.log("updatedEmployee:",updatedEmployee)
+            this.fetchEmployees();
+          },
+          (error) => {
+            alert('Error updating employee')
+            console.error('Error updating employee', error);
+          }
+        );
       } else {
         // Add employee
-        // this.employeeService.addEmployee(employee).subscribe(
-        //   (newEmployee) => {
-        //     this.employees.push(newEmployee);
-        //   },
-        //   (error) => {
-        //     console.error('Error adding employee', error);
-        //   }
-        // );
-        
-        // Add employee
-        employee.id = this.employees.length + 1;
-        this.employees.push(employee);
+        this.employeeService.addEmployee(employee).subscribe(
+          (newEmployee) => {
+            console.log("newEmployee:",newEmployee)
+            this.fetchEmployees();
+          },
+          (error) => {
+            alert('Error adding employee')
+            console.error('Error adding employee', error);
+          }
+        );
       }
     }
     this.closeModal();
-    this.sortEmployees();
   }
 
   sortEmployees(): void {
-    const isReverse = this.reverse === 'true';
-    this.sortedEmployees = this.orderPipe.transform(this.employees, this.order, isReverse);
+    this.fetchEmployees();
   }
 }
 

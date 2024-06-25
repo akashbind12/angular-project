@@ -4,7 +4,7 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="sortBy" class="form-label">Sort By</label>
-        <select id="sortBy" class="form-select" [(ngModel)]="order" (change)="sortEmployees()">
+        <select id="sortBy" class="form-select" [(ngModel)]="sortField" (change)="sortEmployees()">
           <option value="id">ID</option>
           <option value="name">Name</option>
           <option value="department">Department</option>
@@ -13,9 +13,9 @@
       </div>
       <div class="col-md-6">
         <label for="sortOrder" class="form-label">Sort Order</label>
-        <select id="sortOrder" class="form-select" [(ngModel)]="reverse" (change)="sortEmployees()">
-          <option [value]="false">Ascending</option>
-          <option [value]="true">Descending</option>
+        <select id="sortOrder" class="form-select" [(ngModel)]="sortOrder" (change)="sortEmployees()">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
         </select>
       </div>
     </div>
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let employee of sortedEmployees | paginate: { itemsPerPage: pageSize, currentPage: page }">
+        <tr *ngFor="let employee of employees">
           <td>{{ employee.id }}</td>
           <td>{{ employee.name }}</td>
           <td>{{ employee.department }}</td>
@@ -42,7 +42,7 @@
         </tr>
       </tbody>
     </table>
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    <!-- <pagination-controls (pageChange)="page = $event"></pagination-controls> -->
   </div>
   
   <!-- Employee Form Modal -->
