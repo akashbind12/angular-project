@@ -1,0 +1,65 @@
+<div class="container mt-4">
+    <h2>Employee List</h2>
+    <button class="btn btn-primary mb-3" (click)="openModal(null)">Add Employee</button>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="sortBy" class="form-label">Sort By</label>
+        <select id="sortBy" class="form-select" [(ngModel)]="order" (change)="sortEmployees()">
+          <option value="id">ID</option>
+          <option value="name">Name</option>
+          <option value="department">Department</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="sortOrder" class="form-label">Sort Order</label>
+        <select id="sortOrder" class="form-select" [(ngModel)]="reverse" (change)="sortEmployees()">
+          <option [value]="false">Ascending</option>
+          <option [value]="true">Descending</option>
+        </select>
+      </div>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of sortedEmployees | paginate: { itemsPerPage: pageSize, currentPage: page }">
+          <td>{{ employee.id }}</td>
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.department }}</td>
+          <td>{{ employee.email }}</td>
+          <td>
+            <button class="btn btn-secondary me-2" (click)="openModal(employee)">Update</button>
+            <button class="btn btn-danger" (click)="deleteEmployee(employee.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  </div>
+  
+  <!-- Employee Form Modal -->
+  <div *ngIf="selectedEmployee !== null" class="modal show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ selectedEmployee.id ? 'Update Employee' : 'Add Employee' }}</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <app-employee-form
+            [employee]="selectedEmployee"
+            (formSubmit)="handleFormSubmit($event)"
+          ></app-employee-form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

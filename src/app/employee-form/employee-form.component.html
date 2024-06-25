@@ -1,0 +1,38 @@
+<!-- employee-form.component.html -->
+<div class="modal-header">
+    <h5 class="modal-title">{{ employee ? 'Update Employee' : 'Add Employee' }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="formSubmit.emit(undefined)"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input id="name" formControlName="name" class="form-control" 
+            [ngClass]="{ 'is-invalid': employeeForm.get('name')!.invalid && (employeeForm.get('name')!.dirty || employeeForm.get('name')!.touched) }" />
+          <div class="invalid-feedback" *ngIf="employeeForm.get('name')!.invalid && (employeeForm.get('name')!.dirty || employeeForm.get('name')!.touched)">
+            Name is required.
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="department" class="form-label">Department</label>
+          <input id="department" formControlName="department" class="form-control" 
+            [ngClass]="{ 'is-invalid': employeeForm.get('department')!.invalid && (employeeForm.get('department')!.dirty || employeeForm.get('department')!.touched) }" />
+          <div class="invalid-feedback" *ngIf="employeeForm.get('department')!.invalid && (employeeForm.get('department')!.dirty || employeeForm.get('department')!.touched)">
+            Department is required.
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input id="email" formControlName="email" class="form-control" 
+            [ngClass]="{ 'is-invalid': employeeForm.get('email')!.invalid && (employeeForm.get('email')!.dirty || employeeForm.get('email')!.touched) }" />
+          <div class="invalid-feedback" *ngIf="employeeForm.get('email')!.invalid && (employeeForm.get('email')!.dirty || employeeForm.get('email')!.touched)">
+            Email is required.
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>      
+</div>
+  
